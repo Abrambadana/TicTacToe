@@ -1,0 +1,24 @@
+﻿@page
+@model IndexModel
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.5/signalr.min.js"></script>
+    <script src="js/game.js"></script>
+}
+
+<h2>Tic-Tac-Toe</h2>
+<div id="gameStatus">Waiting for another player...</div>
+
+<div id="gameBoard">
+    @for (int i = 0; i < 9; i++)
+    {
+        <button class="cell" id="cell-@i" onclick="makeMove(@i)"></button>
+    }
+</div>
+
+<div>
+    <h3>Scoreboard</h3>
+    <p>Player X: <span id="scoreX">0</span></p>
+    <p>Player O: <span id="scoreO">0</span></p>
+</div>
+
+<button id="restartBtn">Restart Game</button>
