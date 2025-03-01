@@ -15,7 +15,7 @@ public class TicTacToeHub : Hub
 };
 
 
-    public async Task JoinGame()
+    public async Task JoinGame(bool singlePlayer = false)
     {
         if (!players.ContainsValue(Context.ConnectionId)) // Ensure same connection isn't rejoining
         {
@@ -23,8 +23,15 @@ public class TicTacToeHub : Hub
             {
                 players["X"] = Context.ConnectionId;
                 await Clients.Client(Context.ConnectionId).SendAsync("SetPlayer", "X");
+
+                if (singlePlayer)
+                {
+                    players["O"] = "AI"; // Assign AI as Player O
+                    await Clients.Client(Context.ConnectionId).SendAsync("SetSinglePlayerMode");
+                    await Clients.All.SendAsync("StartGame");
+                }
             }
-            else if (!players.ContainsKey("O"))
+            else if (!players.ContainsKey("O") && !singlePlayer)
             {
                 players["O"] = Context.ConnectionId;
                 await Clients.Client(Context.ConnectionId).SendAsync("SetPlayer", "O");
@@ -36,18 +43,36 @@ public class TicTacToeHub : Hub
             }
         }
     }
+
     private async Task UpdateScoreboard()
     {
         await Clients.All.SendAsync("UpdateScoreboard", scores['X'], scores['O']);
     }
 
+    private async Task AIMakeMove()
+    {
+        List<int> availableMoves = new List<int>();
+
+        for (int i = 0; i < board.Length; i++)
+        {
+            if (board[i] == '\0')
+                availableMoves.Add(i);
+        }
+
+        if (availableMoves.Count > 0)
+        {
+            Random rnd = new Random();
+            int aiMove = availableMoves[rnd.Next(availableMoves.Count)]; // Choose a random move
+            await MakeMove(aiMove);
+        }
+    }
 
     public async Task MakeMove(int index)
     {
         if (board[index] == '\0' && players.ContainsKey(currentPlayer.ToString()))
         {
             string currentPlayerId = players[currentPlayer.ToString()];
-            if (Context.ConnectionId != currentPlayerId)
+            if (Context.ConnectionId != currentPlayerId && players[currentPlayer.ToString()] != "AI")
             {
                 await Clients.Client(Context.ConnectionId).SendAsync("GameStatus", "Not your turn!");
                 return;
@@ -58,23 +83,32 @@ public class TicTacToeHub : Hub
 
             if (CheckWin())
             {
-                scores[currentPlayer]++; // Increment the winner's score
+                scores[currentPlayer]++;
                 await Clients.All.SendAsync("GameOver", currentPlayer);
                 await UpdateScoreboard();
                 ResetGame();
+                return;
             }
-            else if (CheckDraw())  // 🔥 Check if the board is full and no winner
+            else if (CheckDraw())
             {
-                await Clients.All.SendAsync("GameDraw");  // 🔥 Notify clients about a draw
+                await Clients.All.SendAsync("GameDraw");
                 ResetGame();
+                return;
             }
-            else
+
+            // Switch turn
+            currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+            await Clients.All.SendAsync("TurnChanged", currentPlayer);
+
+            // If it's AI's turn, make an AI move
+            if (players[currentPlayer.ToString()] == "AI")
             {
-                currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-                await Clients.All.SendAsync("TurnChanged", currentPlayer);
+                await Task.Delay(500); // Add slight delay for realism
+                await AIMakeMove();
             }
         }
     }
+
 
 
 
@@ -118,3 +152,5 @@ public class TicTacToeHub : Hub
         await Clients.All.SendAsync("RestartGame");
     }
 }
+
+

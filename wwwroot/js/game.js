@@ -4,6 +4,18 @@
 
 let playerSymbol = "";
 let gameActive = false;
+document.getElementById("singlePlayerBtn").addEventListener("click", async () => {
+    await connection.invoke("JoinGame", true); // Pass true for single-player mode
+});
+
+document.getElementById("multiPlayerBtn").addEventListener("click", async () => {
+    await connection.invoke("JoinGame", false); // Pass false for multiplayer mode
+});
+
+connection.on("SetSinglePlayerMode", () => {
+    document.getElementById("gameStatus").innerText = "You are Player X. AI is Player O.";
+});
+
 
 connection.on("SetPlayer", (symbol) => {
     playerSymbol = symbol;
