@@ -3,51 +3,178 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Badana_TicTacToe</title>
-    <script type="importmap"></script>
+    <title>@ViewData["Title"] - Tic-Tac-Toe</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Badana_TicTacToe.styles.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: auto;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+        }
+
+
+        .container-fluid {
+            height: 100vh; /* Full viewport height */
+            padding: 0;
+        }
+
+        .row {
+            margin: 0;
+            width: 100%;
+        }
+
+        /* Scoreboard Styles */
+        .card {
+            border: none;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .display-4 {
+            font-size: 2.5rem;
+            color: #00ff00; /* Green for X */
+            text-shadow: 0 0 10px #00ff00;
+        }
+        /* Player X Label (Green) */
+        #playerXLabel, #playerOLabel {
+            color: #00ff00; /* Bright Green */
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        /* Game Board Styles */
+        .game-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #00ffff;
+            background: rgba(0, 0, 0, 0.5);
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            transition: all 0.3s ease;
+        }
+
+            .cell:hover {
+                background: rgba(0, 255, 255, 0.2);
+                border-color: #00ff00;
+            }
+
+            .cell.winning-cell {
+                background: #00ff00;
+                color: #000;
+                text-shadow: none;
+                animation: glow 1s infinite alternate;
+            }
+
+        /* Game Status and Buttons */
+        #gameStatus {
+            font-size: 1.2rem;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .btn-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-lg {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            background: rgba(0, 255, 255, 0.5);
+            color: #fff;
+            text-shadow: 0 0 10px #00ffff;
+            transition: all 0.3s ease;
+        }
+
+            .btn-lg:hover {
+                background: rgba(0, 255, 255, 0.8);
+                box-shadow: 0 0 10px #00ffff;
+            }
+
+        .btn-primary {
+            background: rgba(0, 123, 255, 0.7);
+        }
+
+        .btn-success {
+            background: rgba(40, 167, 69, 0.7);
+        }
+
+        .btn-danger {
+            background: rgba(220, 53, 69, 0.7);
+        }
+
+        /* Animations */
+        @@keyframes glow {
+            0% {
+                box-shadow: 0 0 10px #00ff00;
+            }
+
+            100% {
+                box-shadow: 0 0 20px #00ff00;
+            }
+        }
+
+        /* Restart Button */
+        #restartBtn {
+            background: rgba(255, 0, 0, 0.7);
+            color: #fff;
+            text-shadow: 0 0 10px #ff0000;
+        }
+
+            #restartBtn:hover {
+                background: rgba(255, 0, 0, 0.9);
+                box-shadow: 0 0 10px #ff0000;
+            }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Badana_TicTacToe</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Badana_TicTacToe - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
     <script src="~/js/game.js"></script>
-
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
