@@ -46,6 +46,7 @@ public class TicTacToeHub : Hub
             }
         }
     }
+
     public async Task MakeMove(int index)
     {
         if (board[index] == '\0' && players.ContainsKey(currentPlayer.ToString()))
@@ -64,13 +65,13 @@ public class TicTacToeHub : Hub
             {
                 scores[currentPlayer]++;
                 await Clients.All.SendAsync("GameOver", currentPlayer, scores['X'], scores['O']);
-                ResetGame();
+
                 return;
             }
             else if (CheckDraw())
             {
                 await Clients.All.SendAsync("GameDraw");
-                ResetGame();
+
                 return;
             }
 
@@ -86,7 +87,7 @@ public class TicTacToeHub : Hub
             }
         }
     }
-    
+
     private async Task AIMakeMove()
     {
         int bestMove = -1;
@@ -201,15 +202,13 @@ public class TicTacToeHub : Hub
         return true;
     }
 
-    private void ResetGame()
-    {
-        board = new char[9];
-        currentPlayer = 'X';
-    }
+
 
     public async Task RestartGame()
     {
-        ResetGame();
+        board = new char[9];
+        currentPlayer = 'X';
+
         await Clients.All.SendAsync("RestartGame");
     }
 }

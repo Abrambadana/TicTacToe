@@ -2,55 +2,50 @@
 @model IndexModel
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.5/signalr.min.js"></script>
-    <script src="js/game.js"></script>
 }
-
 <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
-    <div class="row w-100">
+    <div class="row w-100 d-flex justify-content-center align-items-center">
         <!-- Scoreboard on the Left -->
-        <div class="col-md-4 d-flex align-items-center justify-content-center">
-            <div class="card text-center" style="width: 100%; max-width: 300px;">
+        <div class="col-12 col-sm-4 d-flex align-items-center justify-content-center order-sm-1 order-2 mb-3">
+            <div class="card text-center w-100" style="max-width: 280px;">
                 <div class="card-body">
                     <h3 class="card-title">Scoreboard</h3>
                     <hr />
                     <div class="mb-4">
-                        <h5 id="playerXLabel">Player X</h5> <!-- Added ID for styling -->
+                        <h5 id="playerXLabel">Player X</h5>
                         <p class="display-4"><span id="scoreX">0</span></p>
                     </div>
                     <div>
-                        <h5 id="playerOLabel">Player O</h5> <!-- Added ID for styling -->
+                        <h5 id="playerOLabel">Player O</h5>
                         <p class="display-4"><span id="scoreO">0</span></p>
                     </div>
-
                 </div>
             </div>
         </div>
 
         <!-- Game Board on the Right -->
-        <div class="col-md-8 d-flex align-items-center justify-content-center">
-            <div class="text-center">
-                <h1 class="display-4 mb-4">Tic-Tac-Toe</h1>
-                <div id="gameStatus" class="lead mb-4">Choose your game mode:</div>
+        <div class="col-12 col-sm-8 d-flex align-items-center justify-content-center flex-column order-sm-2 order-1">
+            <h1 class="display-4 text-center mb-3">Tic-Tac-Toe</h1>
+            <div id="gameStatus" class="lead mb-3 text-center">Choose your game mode:</div>
 
-                <!-- Game Mode Buttons -->
-                <div class="btn-group mb-4" role="group">
-                    <button id="singlePlayerBtn" class="btn btn-primary btn-lg">Single Player (vs AI)</button>
-                    <button id="multiPlayerBtn" class="btn btn-success btn-lg">Multiplayer</button>
-                </div>
-
-                <!-- Game Board -->
-                <div class="game-container">
-                    <div id="gameBoard" class="board">
-                        @for (int i = 0; i < 9; i++)
-                        {
-                            <button class="cell btn btn-outline-dark btn-lg" id="cell-@i" onclick="makeMove(@i)"></button>
-                        }
-                    </div>
-                </div>
-
-                <!-- Restart Button -->
-                <button id="restartBtn" class="btn btn-danger btn-lg mt-4">Restart Game</button>
+            <!-- Game Mode Buttons -->
+            <div class="btn-group mb-3">
+                <button id="singlePlayerBtn" class="btn btn-primary btn-lg">Single Player (vs AI)</button>
+                <button id="multiPlayerBtn" class="btn btn-success btn-lg">Multiplayer</button>
             </div>
+
+            <!-- Game Board -->
+            <div class="game-container">
+                <div id="gameBoard" class="board">
+                    @for (int i = 0; i < 9; i++)
+                    {
+                        <button class="cell btn btn-outline-dark" id="cell-@i" onclick="makeMove(@i)"></button>
+                    }
+                </div>
+            </div>
+
+            <!-- Restart Button -->
+            <button id="restartBtn" class="btn btn-danger btn-lg mt-3">Restart Game</button>
         </div>
     </div>
 </div>
