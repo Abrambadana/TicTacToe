@@ -13,16 +13,20 @@ document.getElementById("singlePlayerBtn").addEventListener("click", async () =>
 document.getElementById("multiPlayerBtn").addEventListener("click", async () => {
     await switchToMultiplayer();
 });
+document.getElementById("restartBtn").addEventListener("click", async () => {
+    await connection.invoke("RestartGame");
+});
+
 
 // Function to switch to single-player mode
 async function switchToSinglePlayer() {
-    await connection.invoke("ResetGame");
+
     await connection.invoke("JoinGame", true); // Join as single-player
 }
 
 // Function to switch to multiplayer mode
 async function switchToMultiplayer() {
-    await connection.invoke("ResetGame");
+
     await connection.invoke("JoinGame", false); // Join as multiplayer
 }
 
